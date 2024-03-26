@@ -47,6 +47,7 @@ public class KeyControlFragment extends BaseFragment {
     public Button upButton;
     public Button leftButton;
     public Button clickButton;
+    public Button rightButton;
     public Button backButton;
     public Button downButton;
     public Button homeButton;
@@ -74,23 +75,26 @@ public class KeyControlFragment extends BaseFragment {
     EditText editText;
     TextWatcher filterTextWatcher;
 
-    public KeyControlFragment() {};
+    public KeyControlFragment() {
+    }
 
-    public KeyControlFragment(Context context)
-    {
+    ;
+
+    public KeyControlFragment(Context context) {
         super(context);
         testResponse = new TestResponseObject();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
         View rootView = inflater.inflate(
                 R.layout.fragment_fiveway, container, false);
 
         upButton = (Button) rootView.findViewById(R.id.upButton);
         leftButton = (Button) rootView.findViewById(R.id.leftButton);
         clickButton = (Button) rootView.findViewById(R.id.clickButton);
+        rightButton = (Button) rootView.findViewById(R.id.rightButton);
         backButton = (Button) rootView.findViewById(R.id.backButton);
         downButton = (Button) rootView.findViewById(R.id.downButton);
         homeButton = (Button) rootView.findViewById(R.id.homeButton);
@@ -98,21 +102,22 @@ public class KeyControlFragment extends BaseFragment {
         openKeyboardButton.setSelected(false);
         trackpadView = rootView.findViewById(R.id.trackpadView);
 
-        buttons = new Button[7];
+        buttons = new Button[8];
         buttons[0] = upButton;
         buttons[1] = leftButton;
         buttons[2] = clickButton;
-        buttons[3] = backButton;
-        buttons[4] = downButton;
-        buttons[5] = homeButton;
-        buttons[6] = openKeyboardButton;
+        buttons[3] = rightButton;
+        buttons[4] = backButton;
+        buttons[5] = downButton;
+        buttons[6] = homeButton;
+        buttons[7] = openKeyboardButton;
 
         editText = (EditText) rootView.findViewById(R.id.editField);
 
         clearLocalText();
         editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
 
-        editText.addTextChangedListener(new TextWatcher () {
+        editText.addTextChangedListener(new TextWatcher() {
             String lastString = "";
 
             @Override
@@ -127,7 +132,7 @@ public class KeyControlFragment extends BaseFragment {
 
             @Override
             public void beforeTextChanged(CharSequence arg0, int arg1,
-                    int arg2, int arg3) {
+                                          int arg2, int arg3) {
             }
 
             @Override
@@ -141,7 +146,7 @@ public class KeyControlFragment extends BaseFragment {
                 System.out.println("[DEBUG] len: " + s.length());
                 System.out.println("[DEBUG] lastString: " + lastString);
 
-                if (s.length() == 0) { 
+                if (s.length() == 0) {
                     // all characters including the sentinel were deleted
                     getTextInputControl().sendDelete();
 
@@ -167,7 +172,7 @@ public class KeyControlFragment extends BaseFragment {
             }
         });
 
-        editText.setOnEditorActionListener(new OnEditorActionListener () {
+        editText.setOnEditorActionListener(new OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView arg0, int arg1, KeyEvent arg2) {
                 getTextInputControl().sendEnter();
@@ -176,13 +181,13 @@ public class KeyControlFragment extends BaseFragment {
         });
 
 
-        editText.setOnKeyListener(new OnKeyListener() {                 
+        editText.setOnKeyListener(new OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if(keyCode == KeyEvent.KEYCODE_DEL){  
+                if (keyCode == KeyEvent.KEYCODE_DEL) {
                     getTextInputControl().sendDelete();
                 }
-                return false;       
+                return false;
             }
         });
 
@@ -193,9 +198,9 @@ public class KeyControlFragment extends BaseFragment {
         editText.setText("\u200B");
     }
 
-    int getMatchingCharacterLength (String oldString, String newString) {
-        char [] oldChars = oldString.toCharArray();
-        char [] newChars = newString.toCharArray();
+    int getMatchingCharacterLength(String oldString, String newString) {
+        char[] oldChars = oldString.toCharArray();
+        char[] newChars = newString.toCharArray();
 
         int length = Math.min(oldChars.length, newChars.length);
 
@@ -209,16 +214,14 @@ public class KeyControlFragment extends BaseFragment {
     }
 
     @Override
-    public void disableButtons()
-    {
+    public void disableButtons() {
         trackpadView.setOnTouchListener(null);
 
         super.disableButtons();
     }
 
     @Override
-    public void enableButtons()
-    {
+    public void enableButtons() {
         super.enableButtons();
 
         if (getMouseControl() != null) {
@@ -231,12 +234,11 @@ public class KeyControlFragment extends BaseFragment {
                 public void onClick(View view) {
                     if (getKeyControl() != null) {
                         getKeyControl().up(null);
-                        testResponse =  new TestResponseObject(true, TestResponseObject.SuccessCode, TestResponseObject.UpClicked);
+                        testResponse = new TestResponseObject(true, TestResponseObject.SuccessCode, TestResponseObject.UpClicked);
                     }
                 }
             });
-        }
-        else {
+        } else {
             disableButton(upButton);
         }
 
@@ -246,12 +248,11 @@ public class KeyControlFragment extends BaseFragment {
                 public void onClick(View view) {
                     if (getKeyControl() != null) {
                         getKeyControl().left(null);
-                        testResponse =  new TestResponseObject(true, TestResponseObject.SuccessCode, TestResponseObject.LeftClicked);
+                        testResponse = new TestResponseObject(true, TestResponseObject.SuccessCode, TestResponseObject.LeftClicked);
                     }
                 }
             });
-        } 
-        else {
+        } else {
             disableButton(leftButton);
         }
 
@@ -261,15 +262,27 @@ public class KeyControlFragment extends BaseFragment {
                 public void onClick(View view) {
                     if (getKeyControl() != null) {
                         getKeyControl().ok(null);
-                        testResponse =  new TestResponseObject(true, TestResponseObject.SuccessCode, TestResponseObject.Clicked);
+                        testResponse = new TestResponseObject(true, TestResponseObject.SuccessCode, TestResponseObject.Clicked);
                     }
                 }
             });
-        }
-        else {
+        } else {
             disableButton(clickButton);
         }
-        // TODO 함수를 채우시오
+
+        if (getTv().hasCapability(KeyControl.Right)) {
+            clickButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (getKeyControl() != null) {
+                        getKeyControl().right(null);
+                        testResponse = new TestResponseObject(true, TestResponseObject.SuccessCode, TestResponseObject.RightClicked);
+                    }
+                }
+            });
+        } else {
+            disableButton(clickButton);
+        }
 
 
         if (getTv().hasCapability(KeyControl.Back)) {
@@ -281,8 +294,7 @@ public class KeyControlFragment extends BaseFragment {
                     }
                 }
             });
-        }
-        else {
+        } else {
             disableButton(backButton);
         }
 
@@ -292,19 +304,22 @@ public class KeyControlFragment extends BaseFragment {
                 public void onClick(View view) {
                     if (getKeyControl() != null) {
                         getKeyControl().down(null);
-                        testResponse =  new TestResponseObject(true, TestResponseObject.SuccessCode, TestResponseObject.DownClicked);
+                        testResponse = new TestResponseObject(true, TestResponseObject.SuccessCode, TestResponseObject.DownClicked);
                     }
                 }
             });
-        }
-        else {
+        } else {
             disableButton(downButton);
         }
 
         if (getTv().hasCapability(KeyControl.Home)) {
-            // TODO 함수를 채우시오
-        }
-        else {
+           homeButton.setOnClickListener(view -> {
+               if (getKeyControl() != null) {
+                   getKeyControl().home(null);
+                   testResponse = new TestResponseObject(true, TestResponseObject.SuccessCode, TestResponseObject.HomeClicked);
+               }
+           });
+        } else {
             disableButton(homeButton);
         }
 
@@ -313,8 +328,7 @@ public class KeyControlFragment extends BaseFragment {
                 disableButton(openKeyboardButton);
 
                 getTextInputControl().subscribeTextInputStatus(mTextStatusInputListener);
-            }
-            else {
+            } else {
                 openKeyboardButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -324,9 +338,8 @@ public class KeyControlFragment extends BaseFragment {
                             editText.requestFocus();
 
                             InputMethodManager mgr = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-                            mgr.showSoftInput(((Activity)mContext).getCurrentFocus(), InputMethodManager.SHOW_FORCED);
-                        }
-                        else {
+                            mgr.showSoftInput(((Activity) mContext).getCurrentFocus(), InputMethodManager.SHOW_FORCED);
+                        } else {
                             openKeyboardButton.setSelected(false);
 
                             InputMethodManager mgr = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -335,8 +348,7 @@ public class KeyControlFragment extends BaseFragment {
                     }
                 });
             }
-        }
-        else {
+        } else {
             disableButton(openKeyboardButton);
         }
 
@@ -393,13 +405,13 @@ public class KeyControlFragment extends BaseFragment {
                         dy = dySign * Math.round(Math.pow(Math.abs(dy), 1.1));
 
                         if (!isScroll) {
-                            if (getMouseControl() != null) 
+                            if (getMouseControl() != null)
                                 getMouseControl().move(dx, dy);
                         } else {
                             long now = SystemClock.uptimeMillis();
 
-                            scrollDx = (int)(motionEvent.getX() - startX);
-                            scrollDy = (int)(motionEvent.getY() - startY);
+                            scrollDx = (int) (motionEvent.getX() - startX);
+                            scrollDy = (int) (motionEvent.getY() - startY);
 
                             if (now - eventStart > 1000 && autoScrollTimerTask == null) {
                                 Log.d("main", "starting autoscroll");
@@ -417,7 +429,7 @@ public class KeyControlFragment extends BaseFragment {
                         }
                     }
                 } else if (!isDown && !wasMoving) {
-                    if (getMouseControl() != null) 
+                    if (getMouseControl() != null)
                         getMouseControl().click();
                 } else if (!isDown && wasMoving && wasScroll) {
                     // release two fingers
@@ -456,16 +468,14 @@ public class KeyControlFragment extends BaseFragment {
             boolean autoCapitalization = keyboard.isAutoCapitalization();
             boolean hiddenText = keyboard.isHiddenText();
             boolean focusChanged = keyboard.isFocusChanged();
-            int type; 
+            int type;
 
             if (textInputType != TextInputType.DEFAULT) {
                 if (textInputType == TextInputType.NUMBER) {
                     type = InputType.TYPE_CLASS_NUMBER;
-                } 
-                else if (textInputType == TextInputType.PHONE_NUMBER) {
+                } else if (textInputType == TextInputType.PHONE_NUMBER) {
                     type = InputType.TYPE_CLASS_PHONE;
-                } 
-                else {
+                } else {
                     type = InputType.TYPE_CLASS_TEXT;
 
                     if (textInputType == TextInputType.URL) {
@@ -507,7 +517,7 @@ public class KeyControlFragment extends BaseFragment {
                 }
                 editText.requestFocus();
                 InputMethodManager mgr = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-                mgr.showSoftInput(((Activity)mContext).getCurrentFocus(), InputMethodManager.SHOW_FORCED);
+                mgr.showSoftInput(((Activity) mContext).getCurrentFocus(), InputMethodManager.SHOW_FORCED);
             } else {
                 canReplaceText = false;
                 InputMethodManager mgr = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
