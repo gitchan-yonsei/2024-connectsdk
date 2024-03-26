@@ -246,7 +246,9 @@ public class TVFragment extends BaseFragment {
             channelDownButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    // TODO 함수를 채우시오
+                    if (getTVControl() != null) {
+                        getTVControl().channelDown(null);
+                    }
                 }
             });
         }
@@ -260,7 +262,9 @@ public class TVFragment extends BaseFragment {
                 @Override
                 public void onClick(View v) {
                 	testResponse =  new TestResponseObject(true, TestResponseObject.SuccessCode, TestResponseObject.Power_OFF);
-                    // TODO 함수를 채우시오
+                    if (getPowerControl() != null) {
+                        getPowerControl().powerOff(null);
+                    }
                 }
             });
         }
