@@ -313,7 +313,12 @@ public class KeyControlFragment extends BaseFragment {
         }
 
         if (getTv().hasCapability(KeyControl.Home)) {
-            // TODO 함수를 채우시오
+           homeButton.setOnClickListener(view -> {
+               if (getKeyControl() != null) {
+                   getKeyControl().home(null);
+                   testResponse = new TestResponseObject(true, TestResponseObject.SuccessCode, TestResponseObject.HomeClicked);
+               }
+           });
         } else {
             disableButton(homeButton);
         }
