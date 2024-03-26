@@ -131,98 +131,98 @@ public class TVFragment extends BaseFragment {
 
         if (getTv().hasAnyCapability(KeyControl.KeyCode)) {
             numberButtons[0].setOnClickListener(new View.OnClickListener() {
-                
+
                 @Override
                 public void onClick(View v) {
-                    getKeyControl().sendKeyCode(KeyCode.NUM_0, null);;
+                    getKeyControl().sendKeyCode(KeyCode.NUM_0, null);
                 }
             });
-            
+
             numberButtons[1].setOnClickListener(new View.OnClickListener() {
-                
+
                 @Override
                 public void onClick(View v) {
-                    // TODO 함수를 채우시오
+                    getKeyControl().sendKeyCode(KeyCode.NUM_1, null);
                 }
             });
 
             numberButtons[2].setOnClickListener(new View.OnClickListener() {
-                
+
                 @Override
                 public void onClick(View v) {
-                    // TODO 함수를 채우시오
+                    getKeyControl().sendKeyCode(KeyCode.NUM_2, null);
                 }
             });
 
             numberButtons[3].setOnClickListener(new View.OnClickListener() {
-                
+
                 @Override
                 public void onClick(View v) {
-                    // TODO 함수를 채우시오
+                    getKeyControl().sendKeyCode(KeyCode.NUM_3, null);
                 }
             });
 
             numberButtons[4].setOnClickListener(new View.OnClickListener() {
-                
+
                 @Override
                 public void onClick(View v) {
-                    // TODO 함수를 채우시오
+                    getKeyControl().sendKeyCode(KeyCode.NUM_4, null);
                 }
             });
 
             numberButtons[5].setOnClickListener(new View.OnClickListener() {
-                
+
                 @Override
                 public void onClick(View v) {
-                    // TODO 함수를 채우시오
+                    getKeyControl().sendKeyCode(KeyCode.NUM_5, null);
                 }
             });
 
             numberButtons[6].setOnClickListener(new View.OnClickListener() {
-                
+
                 @Override
                 public void onClick(View v) {
-                    // TODO 함수를 채우시오
+                    getKeyControl().sendKeyCode(KeyCode.NUM_6, null);
                 }
             });
 
             numberButtons[7].setOnClickListener(new View.OnClickListener() {
-                
+
                 @Override
                 public void onClick(View v) {
-                    // TODO 함수를 채우시오
+                    getKeyControl().sendKeyCode(KeyCode.NUM_7, null);
                 }
             });
 
             numberButtons[8].setOnClickListener(new View.OnClickListener() {
-                
+
                 @Override
                 public void onClick(View v) {
-                    // TODO 함수를 채우시오
+                    getKeyControl().sendKeyCode(KeyCode.NUM_8, null);
                 }
             });
 
             numberButtons[9].setOnClickListener(new View.OnClickListener() {
-                
+
                 @Override
                 public void onClick(View v) {
-                    // TODO 함수를 채우시오
+                    getKeyControl().sendKeyCode(KeyCode.NUM_9, null);
                 }
             });
 
             dashButton.setOnClickListener(new View.OnClickListener() {
-                
+
                 @Override
                 public void onClick(View v) {
-                    // TODO 함수를 채우시오
+                    getKeyControl().sendKeyCode(KeyCode.DASH, null);
                 }
             });
 
             enterButton.setOnClickListener(new View.OnClickListener() {
-                
+
                 @Override
                 public void onClick(View v) {
-                    // TODO 함수를 채우시오
+                    getKeyControl().sendKeyCode(KeyCode.ENTER, null);
                 }
             });
         }
@@ -246,7 +246,9 @@ public class TVFragment extends BaseFragment {
             channelDownButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    // TODO 함수를 채우시오
+                    if (getTVControl() != null) {
+                        getTVControl().channelDown(null);
+                    }
                 }
             });
         }
@@ -260,7 +262,9 @@ public class TVFragment extends BaseFragment {
                 @Override
                 public void onClick(View v) {
                 	testResponse =  new TestResponseObject(true, TestResponseObject.SuccessCode, TestResponseObject.Power_OFF);
-                    // TODO 함수를 채우시오
+                    if (getPowerControl() != null) {
+                        getPowerControl().powerOff(null);
+                    }
                 }
             });
         }
