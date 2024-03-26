@@ -20,7 +20,7 @@
             android:layout_weight="1"
             android:text="Dummy"
             android:visibility="invisible" />
-        
+
         <Button
             android:id="@+id/upButton"
             style="?android:attr/buttonStyleSmall"
@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Up" />
-        
+
         <Button
             android:id="@+id/openKeyboardButton"
             style="?android:attr/buttonStyleSmall"
@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Keyboard" />
-        
+
     </LinearLayout>
 
     <LinearLayout
@@ -61,6 +61,14 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Click" />
+
+        <Button
+            android:id="@+id/rightButton"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Right" />
     </LinearLayout>
 
     <LinearLayout
