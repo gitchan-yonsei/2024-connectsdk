@@ -271,7 +271,7 @@ public class KeyControlFragment extends BaseFragment {
         }
 
         if (getTv().hasCapability(KeyControl.Right)) {
-            clickButton.setOnClickListener(new View.OnClickListener() {
+            rightButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (getKeyControl() != null) {
@@ -281,7 +281,7 @@ public class KeyControlFragment extends BaseFragment {
                 }
             });
         } else {
-            disableButton(clickButton);
+            disableButton(rightButton);
         }
 
 

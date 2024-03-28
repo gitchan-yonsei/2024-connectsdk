@@ -20,6 +20,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.connectsdk.sampler.fragments.AppsFragment;
 import com.connectsdk.sampler.fragments.BaseFragment;
+import com.connectsdk.sampler.fragments.GitchanFragment;
 import com.connectsdk.sampler.fragments.KeyControlFragment;
 import com.connectsdk.sampler.fragments.MediaPlayerFragment;
 import com.connectsdk.sampler.fragments.SystemFragment;
@@ -77,6 +78,10 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
             case 5:
                 newFragment = new SystemFragment(mContext);
+                break;
+
+            case 6:
+                newFragment = new GitchanFragment(mContext);
                 break;
 
             case 0:
