@@ -43,9 +43,11 @@ public class AppsFragment extends BaseFragment {
     //  public Button smartWorldButton;
     public Button browserButton;
     public Button myAppButton;
-    public Button appStoreButton;
     public Button toastButton;
 
+    public Button netflixButton;
+    public Button appStoreButton;
+    public Button youtubeButton;
     public ListView appListView;
     public AppAdapter adapter;
     LaunchSession runningAppSession;
@@ -56,49 +58,53 @@ public class AppsFragment extends BaseFragment {
     ServiceSubscription<AppInfoListener> runningAppSubs;
 
     public AppsFragment() {
-    	testResponse = new TestResponseObject();
-    	
-    };
+        testResponse = new TestResponseObject();
 
-    public AppsFragment(Context context)
-    {
+    }
+
+    ;
+
+    public AppsFragment(Context context) {
         super(context);
         testResponse = new TestResponseObject();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
         View rootView = inflater.inflate(
                 R.layout.fragment_apps, container, false);
 
         browserButton = (Button) rootView.findViewById(R.id.browserButton);
         myAppButton = (Button) rootView.findViewById(R.id.myApp);
-        appStoreButton = (Button) rootView.findViewById(R.id.appStoreButton);
         toastButton = (Button) rootView.findViewById(R.id.toastButton);
+
+        netflixButton = (Button) rootView.findViewById(R.id.netflixButton);
+        appStoreButton = (Button) rootView.findViewById(R.id.appStoreButton);
+        youtubeButton = (Button) rootView.findViewById(R.id.youtubeButton);
 
         appListView = (ListView) rootView.findViewById(R.id.appListView);
         adapter = new AppAdapter(getContext(), R.layout.app_item);
         appListView.setAdapter(adapter);
 
-        buttons = new Button[] {
+        buttons = new Button[]{
                 browserButton,
-                toastButton, 
-                myAppButton, 
-                appStoreButton
+                toastButton,
+                myAppButton,
+                netflixButton,
+                appStoreButton,
+                youtubeButton
         };
 
         return rootView;
     }
 
     @Override
-    public void enableButtons()
-    {
+    public void enableButtons() {
         super.enableButtons();
 
-        if (getTv().hasCapability(Launcher.Browser) 
-                || getTv().hasCapability(Launcher.Browser_Params))
-        {
+        if (getTv().hasCapability(Launcher.Browser)
+                || getTv().hasCapability(Launcher.Browser_Params)) {
             browserButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -107,15 +113,14 @@ public class AppsFragment extends BaseFragment {
                         if (runningAppSession != null) {
                             runningAppSession.close(null);
                         }
-                    }
-                    else {
+                    } else {
                         browserButton.setSelected(true);
 
                         getLauncher().launchBrowser("http://connectsdk.com/", new Launcher.AppLaunchListener() {
 
                             public void onSuccess(LaunchSession session) {
                                 setRunningAppInfo(session);
-                                testResponse =  new TestResponseObject(true, TestResponseObject.SuccessCode, TestResponseObject.Launched_Browser);
+                                testResponse = new TestResponseObject(true, TestResponseObject.SuccessCode, TestResponseObject.Launched_Browser);
                             }
 
                             public void onError(ServiceCommandError error) {
@@ -124,8 +129,7 @@ public class AppsFragment extends BaseFragment {
                     }
                 }
             });
-        }
-        else {
+        } else {
             disableButton(browserButton);
         }
 
@@ -135,15 +139,76 @@ public class AppsFragment extends BaseFragment {
                 @Override
                 public void onClick(View v) {
                     getToastControl().showToast("Yeah, toast!", getToastIconData(), "png", null);
-                    testResponse =  new TestResponseObject(true, TestResponseObject.SuccessCode, TestResponseObject.Show_Toast);
+                    testResponse = new TestResponseObject(true, TestResponseObject.SuccessCode, TestResponseObject.Show_Toast);
                 }
             });
-        }
-        else {
+        } else {
             disableButton(toastButton);
         }
 
         browserButton.setSelected(false);
+
+        if (getTv().hasCapability(Launcher.Netflix)
+                || getTv().hasCapability(Launcher.Netflix_Params)) {
+            netflixButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (netflixButton.isSelected()) {
+                        netflixButton.setSelected(false);
+                        if (runningAppSession != null) {
+                            runningAppSession.close(null);
+                        }
+                    } else {
+                        netflixButton.setSelected(true);
+
+                        getLauncher().launchBrowser("http://netflix.com/", new Launcher.AppLaunchListener() {
+
+                            public void onSuccess(LaunchSession session) {
+                                setRunningAppInfo(session);
+                                testResponse = new TestResponseObject(true, TestResponseObject.SuccessCode, TestResponseObject.Launched_Netflix);
+                            }
+
+                            public void onError(ServiceCommandError error) {
+                            }
+                        });
+                    }
+                }
+            });
+        } else {
+            disableButton(netflixButton);
+        }
+
+
+        if (getTv().hasCapability(Launcher.YouTube)
+                || getTv().hasCapability(Launcher.YouTube_Params)) {
+            youtubeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (youtubeButton.isSelected()) {
+                        youtubeButton.setSelected(false);
+                        if (runningAppSession != null) {
+                            runningAppSession.close(null);
+                        }
+                    } else {
+                        youtubeButton.setSelected(true);
+
+                        getLauncher().launchBrowser("https://youtube.com/", new Launcher.AppLaunchListener() {
+
+                            public void onSuccess(LaunchSession session) {
+                                setRunningAppInfo(session);
+                                testResponse = new TestResponseObject(true, TestResponseObject.SuccessCode, TestResponseObject.Launched_Youtube);
+                            }
+
+                            public void onError(ServiceCommandError error) {
+                            }
+                        });
+                    }
+                }
+            });
+        } else {
+            disableButton(youtubeButton);
+        }
+
 
         if (getTv().hasCapability(Launcher.RunningApp_Subscribe)) {
             runningAppSubs = getLauncher().subscribeRunningApp(new AppInfoListener() {
@@ -179,7 +244,9 @@ public class AppsFragment extends BaseFragment {
                     adapter.sort();
                 }
 
-                @Override public void onError(ServiceCommandError error) { }
+                @Override
+                public void onError(ServiceCommandError error) {
+                }
             });
         }
 
@@ -209,8 +276,7 @@ public class AppsFragment extends BaseFragment {
         if (getTv().hasCapability(Launcher.Browser)) {
             if (getTv().hasCapability(Launcher.Browser_Params)) {
                 browserButton.setText("Open Google");
-            }
-            else {
+            } else {
                 browserButton.setText("Open Browser");
             }
         }
@@ -300,7 +366,7 @@ public class AppsFragment extends BaseFragment {
 
     @Override
     public void disableButtons() {
-        if (runningAppSubs != null) 
+        if (runningAppSubs != null)
             runningAppSubs.unsubscribe();
         adapter.clear();
 
