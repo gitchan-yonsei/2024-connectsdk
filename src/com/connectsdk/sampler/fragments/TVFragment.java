@@ -38,6 +38,7 @@ import com.connectsdk.service.command.ServiceSubscription;
 
 public class TVFragment extends BaseFragment {
     public Button channelDownButton;
+    public Button channelUpButton;
     public Button powerOffButton;
     public Button mode3DButton;
 
@@ -54,17 +55,19 @@ public class TVFragment extends BaseFragment {
 
     private ServiceSubscription<ChannelListener> mCurrentChannelSubscription;
 
-    public TVFragment() {};
+    public TVFragment() {
+    }
 
-    public TVFragment(Context context)
-    {
+    ;
+
+    public TVFragment(Context context) {
         super(context);
         testResponse = new TestResponseObject();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
         View rootView = inflater.inflate(
                 R.layout.fragment_tv, container, false);
 
@@ -83,6 +86,7 @@ public class TVFragment extends BaseFragment {
         enterButton = (Button) rootView.findViewById(R.id.enterButton);
 
         channelDownButton = (Button) rootView.findViewById(R.id.channelDownButton);
+        channelUpButton = (Button) rootView.findViewById(R.id.channelUpButton);
         powerOffButton = (Button) rootView.findViewById(R.id.powerOffButton);
         mode3DButton = (Button) rootView.findViewById(R.id.mode3DButton);
 
@@ -91,7 +95,7 @@ public class TVFragment extends BaseFragment {
 
         channelListView.setAdapter(adapter);
 
-        buttons = new Button[] {
+        buttons = new Button[]{
                 numberButtons[0],
                 numberButtons[1],
                 numberButtons[2],
@@ -105,6 +109,7 @@ public class TVFragment extends BaseFragment {
                 dashButton,
                 enterButton,
                 channelDownButton,
+                channelUpButton,
                 powerOffButton,
                 mode3DButton
         };
@@ -125,8 +130,7 @@ public class TVFragment extends BaseFragment {
     }
 
     @Override
-    public void enableButtons()
-    {
+    public void enableButtons() {
         super.enableButtons();
 
         if (getTv().hasAnyCapability(KeyControl.KeyCode)) {
@@ -225,8 +229,7 @@ public class TVFragment extends BaseFragment {
                     getKeyControl().sendKeyCode(KeyCode.ENTER, null);
                 }
             });
-        }
-        else {
+        } else {
             disableButton(numberButtons[0]);
             disableButton(numberButtons[1]);
             disableButton(numberButtons[2]);
@@ -251,9 +254,21 @@ public class TVFragment extends BaseFragment {
                     }
                 }
             });
-        }
-        else {
+        } else {
             disableButton(channelDownButton);
+        }
+
+        if (getTv().hasCapability(TVControl.Channel_Up)) {
+            channelUpButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (getTVControl() != null) {
+                        getTVControl().channelUp(null);
+                    }
+                }
+            });
+        } else {
+            disableButton(channelUpButton);
         }
 
         if (getTv().hasCapability(PowerControl.Off)) {
@@ -261,14 +276,13 @@ public class TVFragment extends BaseFragment {
 
                 @Override
                 public void onClick(View v) {
-                	testResponse =  new TestResponseObject(true, TestResponseObject.SuccessCode, TestResponseObject.Power_OFF);
+                    testResponse = new TestResponseObject(true, TestResponseObject.SuccessCode, TestResponseObject.Power_OFF);
                     if (getPowerControl() != null) {
                         getPowerControl().powerOff(null);
                     }
                 }
             });
-        }
-        else {
+        } else {
             disableButton(powerOffButton);
         }
 
@@ -285,8 +299,7 @@ public class TVFragment extends BaseFragment {
                     }
                 }
             });
-        }
-        else {
+        } else {
             disableButton(mode3DButton);
         }
 
@@ -329,12 +342,10 @@ public class TVFragment extends BaseFragment {
     }
 
     @Override
-    public void disableButtons()
-    {
+    public void disableButtons() {
         adapter.clear();
 
-        if (mCurrentChannelSubscription != null)
-        {
+        if (mCurrentChannelSubscription != null) {
             mCurrentChannelSubscription.unsubscribe();
             mCurrentChannelSubscription = null;
         }
