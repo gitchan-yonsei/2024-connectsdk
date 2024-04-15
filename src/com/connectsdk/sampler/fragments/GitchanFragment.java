@@ -3,25 +3,25 @@ package com.connectsdk.sampler.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.SeekBar;
 
 
 import com.connectsdk.sampler.R;
 import com.connectsdk.sampler.util.TestResponseObject;
-import com.connectsdk.sampler.widget.AppAdapter;
 import com.connectsdk.service.capability.VolumeControl;
+import com.connectsdk.service.command.ServiceCommandError;
 
 public class GitchanFragment extends BaseFragment {
 
     public Button playButton;
     public Button pauseButton;
     public Button stopButton;
-    public SeekBar mVolumeBar;
+    public SeekBar volumeSlider;
     public Handler mHandler;
     public TestResponseObject testResponse;
 
@@ -46,7 +46,8 @@ public class GitchanFragment extends BaseFragment {
         playButton = (Button) rootView.findViewById(R.id.playButton);
         pauseButton = (Button) rootView.findViewById(R.id.pauseButton);
         stopButton = (Button) rootView.findViewById(R.id.stopButton);
-        mVolumeBar = (SeekBar) rootView.findViewById(R.id.volume_seek_bar);
+        volumeSlider = (SeekBar) rootView.findViewById(R.id.volume_seek_bar);
+        volumeSlider.setMax(100);
 
         buttons = new Button[3];
         buttons[0] = playButton;
@@ -63,8 +64,8 @@ public class GitchanFragment extends BaseFragment {
         playButton.setOnClickListener(playClickListener);
         pauseButton.setOnClickListener(pauseClickListener);
         stopButton.setOnClickListener(stopClickListener);
-        mVolumeBar.setEnabled(getTv().hasCapability(VolumeControl.Volume_Set));
-        mVolumeBar.setOnSeekBarChangeListener(volumeSeekListener);
+        volumeSlider.setEnabled(getTv().hasCapability(VolumeControl.Volume_Set));
+        volumeSlider.setOnSeekBarChangeListener(volumeSeekListener);
         super.enableButtons();
     }
 
@@ -92,10 +93,11 @@ public class GitchanFragment extends BaseFragment {
         }
     };
 
+
     @Override
     public void disableButtons() {
-        mVolumeBar.setEnabled(false);
-        mVolumeBar.setOnSeekBarChangeListener(null);
+        volumeSlider.setEnabled(false);
+        volumeSlider.setOnSeekBarChangeListener(null);
 
         super.disableButtons();
     }
