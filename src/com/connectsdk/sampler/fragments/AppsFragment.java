@@ -161,7 +161,7 @@ public class AppsFragment extends BaseFragment {
                     } else {
                         netflixButton.setSelected(true);
 
-                        getLauncher().launchBrowser("http://netflix.com/", new Launcher.AppLaunchListener() {
+                        getLauncher().launchNetflix("http://connectsdk.com/", new Launcher.AppLaunchListener() {
 
                             public void onSuccess(LaunchSession session) {
                                 setRunningAppInfo(session);
@@ -192,7 +192,7 @@ public class AppsFragment extends BaseFragment {
                     } else {
                         youtubeButton.setSelected(true);
 
-                        getLauncher().launchBrowser("https://youtube.com/", new Launcher.AppLaunchListener() {
+                        getLauncher().launchYouTube("http://connectsdk.com/", new Launcher.AppLaunchListener() {
 
                             public void onSuccess(LaunchSession session) {
                                 setRunningAppInfo(session);
